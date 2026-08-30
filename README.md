@@ -1,282 +1,203 @@
-# WP OpenStation
+# OpenStation for WordPress + Grok
 
-A WordPress plugin that reimagines `/wp-admin` as a desktop operating system. Admin screens open as draggable, resizable, minimizable **windows** on a **desktop**, with a left-edge **dock** built from the admin menu. Purely opt-in per user — the classic admin stays untouched for everyone else, and deactivating the plugin restores vanilla Core exactly.
+Give Grok a live, permission-aware map of what a WordPress site can do—and a safe way to do it.
 
-Zero Core patches. Every feature is wired through public WordPress hooks.
+This repository contains both sides of the integration:
 
-[![Active Installs](https://img.shields.io/wordpress/plugin/installs/desktop-mode?logo=wordpress&logoColor=%23fff&label=Active%20Installs&labelColor=%2323282D&color=%2323282D)](https://wordpress.org/plugins/desktop-mode/) [![Playground Demo Link](https://img.shields.io/wordpress/plugin/v/desktop-mode?logo=data%3Aimage%2Fsvg%2Bxml%3Bbase64%2CPHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjQ2IDI2IDUxIDUyIiBmaWxsPSJ3aGl0ZSI%2BPHBhdGggZmlsbC1ydWxlPSJldmVub2RkIiBjbGlwLXJ1bGU9ImV2ZW5vZGQiIGQ9Ik01My43MTE3IDQ1LjQ4MzlDNTIuNjY1IDQ2LjkyNzcgNTIuMTEyNyA0OC43MDE3IDUyLjAyMzkgNTAuNjUxM0M1Mi4wMDk2IDUwLjk2NjcgNTIuMDA3MyA1MS4yODY2IDUyLjAxNzEgNTEuNjEwNUM1Mi4xNDk0IDU1Ljk5NjUgNTQuNDgxMyA2MS4xMDUxIDU4LjY4NzkgNjUuMzExOEM2NS4xMjU4IDcxLjc0OTYgNzMuNjc2MSA3My43OTY2IDc4LjUxNiA3MC4yODgxQzc2LjQ4MDIgNjkuODA4NCA3NC40MjA2IDY5LjA2MDcgNzIuMzkyNiA2OC4wNjMzQzcxLjg3MiA2OC4wNDA1IDcxLjMxMTkgNjcuOTcyNiA3MC43MTE2IDY3Ljg1MjZDNjkuNjg1MiA2Ny42NDczIDY4LjU5OTggNjcuMjk0OSA2Ny40OTQxIDY2Ljc5MzZDNjcuNDk0MSA2Ni43OTM1IDY3LjQ5NCA2Ni43OTMzIDY3LjQ5NCA2Ni43OTMxQzY1LjQ3MTkgNjUuODc2NSA2My4zODE4IDY0LjQ2MjIgNjEuNDU5NiA2Mi41NEM1OS41Mzc2IDYwLjYxOCA1OC4xMjM0IDU4LjUyODEgNTcuMjA2OCA1Ni41MDYzQzU3LjIwNjcgNTYuNTA2MiA1Ny4yMDY2IDU2LjUwNjIgNTcuMjA2NSA1Ni41MDYyQzU2LjcwNTMgNTUuNDAwNCA1Ni4zNTI4IDU0LjMxNSA1Ni4xNDc1IDUzLjI4ODRDNTYuMDI3NSA1Mi42ODgzIDU1Ljk1OTYgNTIuMTI4MyA1NS45MzY4IDUxLjYwNzhDNTQuOTM5MyA0OS41Nzk3IDU0LjE5MTQgNDcuNTE5OSA1My43MTE3IDQ1LjQ4MzlaTTQ5LjY3OTUgNTcuNjkwNkM0OS44MjYgNTcuNTQ0MSA0OS45Nzk3IDU3LjQwNzQgNTAuMTQwMSA1Ny4yODA1QzUwLjYxMTcgNTguNjU3IDUxLjIzNCA2MC4wMzAzIDUxLjk5NjggNjEuMzczNEM1MS44OTQyIDYxLjgyNiA1MS44NzI2IDYyLjQ0NiA1Mi4wMzg4IDYzLjI3NzFDNTIuMzY4NyA2NC45MjY5IDUzLjM5NzYgNjYuOTUyMiA1NS4yMjI5IDY4Ljc3NzVDNTcuMDQ4MiA3MC42MDI4IDU5LjA3MzUgNzEuNjMxNiA2MC43MjMyIDcxLjk2MTZDNjEuNTU0NiA3Mi4xMjc5IDYyLjE3NDcgNzIuMTA2MSA2Mi42MjczIDcyLjAwMzVDNjMuOTcwNCA3Mi43NjYyIDY1LjM0MzcgNzMuMzg4NCA2Ni43MjAxIDczLjg1OTlDNjYuNTkzMSA3NC4wMjA0IDY2LjQ1NjQgNzQuMTc0MyA2Ni4zMDk3IDc0LjMyMDlDNjMuMjQ4MiA3Ny4zODI1IDU3LjA0MzUgNzYuMTQxNSA1Mi40NTEyIDcxLjU0OTJDNDcuODU4OSA2Ni45NTY5IDQ2LjYxNzkgNjAuNzUyMiA0OS42Nzk1IDU3LjY5MDZaTTY0LjkyMzkgNTkuMDc1OEM3NC4xMDg2IDY4LjI2MDUgODYuNTE4IDcwLjc0MjQgOTIuNjQxMSA2NC42MTkzQzk0Ljg1NSA2Mi40MDUzIDk1Ljk0MzkgNTkuMzY5NiA5NS45OTc5IDU1Ljk2MTZDOTYuMDkzMSA0OS45NDQxIDkyLjk2MTMgNDIuNzY2MSA4Ny4wOTc2IDM2LjkwMjRDNzcuOTEzIDI3LjcxNzcgNjUuNTAzNiAyNS4yMzU5IDU5LjM4MDUgMzEuMzU5QzU3LjE2MzYgMzMuNTc1OCA1Ni4wNzQ3IDM2LjYxNjcgNTYuMDIzNSA0MC4wMzAzQzU1LjkzMzIgNDYuMDQ1IDU5LjA2NDcgNTMuMjE2NiA2NC45MjM5IDU5LjA3NThaTTc3Ljg1ODYgNjAuNzA1NkM3OC4wMjkyIDYxLjU1ODQgNzguMDk0NCA2Mi4zMzAxIDc4LjA3NDcgNjMuMDIyNEM3NC42MjU1IDYxLjgyMTggNzAuOTcwMiA1OS41Nzg5IDY3LjY5NTYgNTYuMzA0NEM2NC40MjExIDUzLjAyOTggNjIuMTc4MiA0OS4zNzQ1IDYwLjk3NzYgNDUuOTI1NEM2MS42NyA0NS45MDU2IDYyLjQ0MTcgNDUuOTcwOSA2My4yOTQ1IDQ2LjE0MTVDNjYuMTk4MSA0Ni43MjIyIDY5LjU3MzEgNDguNDgwMiA3Mi41NDY1IDUxLjQ1MzZDNzUuNTE5OCA1NC40MjcgNzcuMjc3OSA1Ny44MDE5IDc3Ljg1ODYgNjAuNzA1NlpNNjIuMTUyMiAzNC4xMzA3QzYwLjQ5MjcgMzUuNzkwMiA1OS42MDcyIDM4LjQ4OTUgNjAuMDUzMyA0Mi4wNjA4QzY0Ljc0ODMgNDEuNjA0NCA3MC42MDA1IDQzLjk2NDIgNzUuMzE4MiA0OC42ODE5QzgwLjAzNTkgNTMuMzk5NiA4Mi4zOTU3IDU5LjI1MTcgODEuOTM5MiA2My45NDY4Qzg1LjUxMDYgNjQuMzkyOCA4OC4yMDk4IDYzLjUwNzMgODkuODY5MyA2MS44NDc4QzkxLjcxNTggNjAuMDAxMyA5Mi42MDQgNTYuODY3NyA5MS43NjYxIDUyLjY3NzdDOTAuOTM0NSA0OC41MjAxIDg4LjQ0NzQgNDMuNzk1NSA4NC4zMjU5IDM5LjY3NDFDODAuMjA0NSAzNS41NTI2IDc1LjQ3OTkgMzMuMDY1NSA3MS4zMjIzIDMyLjIzMzlDNjcuMTMyMyAzMS4zOTU5IDYzLjk5ODcgMzIuMjg0MiA2Mi4xNTIyIDM0LjEzMDdaIi8%2BPC9zdmc%2B&logoColor=%23fff&label=Playground%20Demo&labelColor=%233858e9&color=%233858e9)](https://playground.wordpress.net/?blueprint-url=https://raw.githubusercontent.com/WordPress/openstation/refs/heads/trunk/.wordpress-org/blueprints/blueprint.json) [![Studio Demo Link](https://img.shields.io/wordpress/plugin/v/desktop-mode?logo=wordpress&logoColor=%23fff&label=Open%20in%20WordPress%20Studio&labelColor=%2323282D&color=%2323282D)](https://wp.com/open?deep_link=add-site%3Fblueprint_url%3Dhttps%253A%252F%252Fraw.githubusercontent.com%252FWordPress%252Fopenstation%252Frefs%252Fheads%252Ftrunk%252F.wordpress-org%252Fblueprints%252Fblueprint.json)
+- a WordPress plugin with OpenStation's **MCP Control Center**, reviewed WordPress abilities, and an open desktop workspace; and
+- a **Grok Build plugin** that discovers, explains, and executes the abilities exposed by the connected WordPress site.
 
-## Demo
+It uses the official [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter). OpenStation does not replace the adapter or maintain a second WordPress API. It makes setup visible, contributes useful abilities, and teaches Grok to operate the live ability catalogue safely.
 
-<video src="https://github.com/user-attachments/assets/590aacc2-e9d7-4213-889e-b91e060e1bd8" controls width="720"></video>
-
----
-
-## Contents
-
-- [Demo](#demo)
-- [Current State](#current-state)
-- [Still ahead](#still-ahead)
-- [Repository layout](#repository-layout)
-- [Bundled extensions](#bundled-extensions)
-- [How to run it](#how-to-run-it)
-  - [Quick install](#quick-install)
-  - [Development setup](#development-setup)
-- [Requirements](#requirements)
-- [For plugin authors](#for-plugin-authors)
-- [License](#license)
-
----
-
-## Current State
-
-- **Station Home**
-  Native, role-aware replacement for the ordinary WordPress Dashboard inside OpenStation: recent personal work, four live site instruments, an actionable attention queue, and quick paths to create, upload, view the site, open WP Explorer, or deliberately return to the Classic Dashboard.
-
-- **Per-user opt-in**
-  Admin-bar toggle sets the `desktop_mode_mode` user meta. A dedicated `/openstation/` portal URL auto-enables OpenStation for first-time visitors (gated by `openstation_portal_auto_enable`) and the `admin_init` redirect sends opted-in users from `/wp-admin/` to the portal (`openstation_admin_redirect_to_portal`).
-
-- **Desktop shell**
-  Fixed-viewport desktop that overlays `/wp-admin`: wallpaper area, unified dock (placement picked in OpenStation Preferences — left / right / bottom, default bottom), right-column widget layer, and full windowing system. `openstation_mode_init`, `openstation_shell_before` / `_after`, and the `openstation_shell_config` filter are the main extension points.
-
-- **Window system — iframe + native**
-  Iframe windows load admin pages with `?openstation_chromeless=1` (chromeless mode). Native windows render directly in the parent DOM via `openstation_register_window()` / `wp.os.registerWindow()` — multi-tab native windows are supported through `openstation_register_window_tab()`. Both types share drag, resize, minimize, maximize, close, fullscreen, and detach-to-new-tab.
-
-- **Dock**
-  One unified rail hosting every admin menu — core and plugin alike — plus shell-level system tiles. Placement (left / right / bottom) is a user preference in OpenStation Preferences. Core menus are ordered before plugin menus; per-item hiding via `openstation_dock_placement` (`'hidden'`). Per-item multi-window support via `openstation_dock_item_multi`. Letter-badge icon fallback for plugins without icon art.
-
-- **Virtual desktops (“Spaces”)**
-  Multiple desktops per user, each with its own window set. Overview grid (zoom-out view) surfaces the Spaces switcher, thumbnails, and create/close controls.
-
-- **Arrange & snap**
-  Admin-bar Arrange menu: Cascade, Tile, Overview, Snap to grid. Plugins contribute custom entries via `openstation_arrange_menu_items` and react to clicks via `os.arrange.custom-action`. Tile grid dimensions and snap cell size are both filterable.
-
-- **Wallpaper registry**
-  Server- and client-side registration (`openstation_register_wallpaper()` / `wp.os.registerWallpaper()`). CSS presets + canvas (WebGL/2D) wallpapers with collision-aware surface data (`wp.os.getWallpaperSurfaces()`) for snow/rain/physics effects. In-panel `renderEditor` callback for custom controls, shared vendor-module loader (`pixijs` pre-registered).
-
-- **Widgets**
-  Right-column floating cards, optionally draggable / resizable outside the column. `openstation_register_widget()` / `wp.os.registerWidget()`. Built-in clock. User placement persists per-user in `localStorage`.
-
-- **Desktop icons**
-  Wallpaper-layer shortcuts via `openstation_register_icon()` — targets a registered native window or an admin URL.
-
-- **AI Assistant + slash commands**
-  Cmd+K palette backed by an OpenAI agentic loop whose `search_posts` / `search_pages` / `search_comments` tools run WordPress's native keyword search. Admin-configured API key + model picker. The only automatic AI analysis is comment spam scoring (on comment save), which feeds the comments-window spam score; posts, pages, and terms are not analyzed. `wp.os.registerCommand()` adds slash commands with autocomplete (`suggest()`), confirm dialogs (`ctx.confirm()`), and full lifecycle hooks (`before-run` / `after-run` / `error`). Built-in `/open [window]` is extensible via `os.open-command.items`.
-
-- **MCP Control Center**
-  Administrator-only setup and audit surface for the official WordPress MCP Adapter. It can explicitly install/activate the official GitHub release, guides Application Password setup, exposes a disabled-by-default editorial ability pack, and audits every registered ability's public/private exposure, read/write/destructive risk, provider, and schemas. OpenStation also contributes a safe, MCP-public `desktop-mode/list-workspace-catalog` ability so connected assistants can explain the registered workspace without receiving callbacks, nonces, configuration, or browser-local state. See [`docs/mcp-control-center.md`](./docs/mcp-control-center.md).
-
-- **Palette registry**
-  Cmd+K cycles through all registered palettes (`wp.os.registerPalette()`) — the AI assistant is palette 0 by default; additional plugin overlays share the shortcut.
-
-- **Cross-frame drag bridge**
-  Media-library attachments drag across iframe boundaries via coordinated postMessage. Site-wide toggle through the Extended Options REST endpoint.
-
-- **Toast notifications**
-  Shell-level toasts rendered via the `<os-toast>` component. Plugins register their own tone/icon via the `openstation_toast_types` filter. Iframe pages raise a toast through the `os-notification` bridge message — it survives the iframe's own lifecycle.
-
-- **OpenStation Preferences**
-  Native-window settings panel: wallpaper picker (with HD-only media filter), accent color swatches + custom gradient editor, dock size slider, AI platform config, and per-user default-on-startup window. Persisted via `/desktop-mode/v1/os-settings`.
-
-- **Session persistence**
-  Full window stack (including desktops, focus, state) is debounce-saved to `/desktop-mode/v1/session` and restored without layout flicker. Viewport-shrink clamping keeps off-screen windows reachable.
-
-- **postMessage bridge**
-  Typed messages for title changes, navigation (same-origin validated), focus, color-scheme sync, screen-meta panels (Screen Options / Help), external-link capture, iframe-ready handshake, and observability (`iframe-error`, `iframe-network`).
-
-- **UI component library**
-  ~25 `<os-*>` web components (`os-button`, `os-menu`, `os-panel`, `os-range-field`, `os-swatch`, `os-toast`, `os-tabs`, …) available to plugin authors — rendered server-side via `openstation_component()` or imported in TS.
-
-- **i18n**
-  Full gettext coverage across PHP and TypeScript; Spanish translation shipped. Strings go through `wp.i18n` (`__`, `_x`, `_n`, `sprintf`) directly — no shell-specific re-export.
-
-- **Component registration API**
-  Stable `openstation_register_*` functions for windows, widgets, wallpapers, icons, and window tabs. All return `true` / `WP_Error` with documented error codes.
-
-- **Public hook API**
-  Comprehensive PHP and JS hook surface — dock items, placement, multi-window, native-window lifecycle, widget lifecycle, wallpaper lifecycle + surfaces, window lifecycle, iframe observability, arrange actions, virtual-desktop transitions, palette registration, command lifecycle, batch close, AI prompt + model + post-type filters, accents, toast types, default wallpaper. See [`docs/hooks-reference.md`](./docs/hooks-reference.md) and [`docs/javascript-reference.md`](./docs/javascript-reference.md).
-
----
-
-## Still ahead
-
-- **Mobile (phone OS)** — purpose-built home-screen grid, full-screen apps, app switcher, gesture nav, bottom tab bar.
-- **Tablet hybrid** — split view, slide-over, horizontal dock. `wp.os.mode = 'desktop' | 'tablet' | 'mobile'` surface.
-- **Cross-window drag & drop (the North Star)** — extend the current drag bridge to Media → Gutenberg block insertion, with pluggable mime-type negotiation.
-- **Polish** — color-scheme-aware variables across all shell surfaces, View Transitions API animations, full a11y audit (ARIA, focus traps, keyboard nav).
-- **…and a whole lot more hooks, filters, and actions** — every new surface lands with its own extension points, so this list keeps growing.
-
-See [`docs/architecture.md`](./docs/architecture.md) for how the pieces fit together and [`docs/hooks-reference.md`](./docs/hooks-reference.md) for the hook surface (current and planned).
-
----
-
-## Repository layout
-
-```
-.
-├── desktop-mode.php       # bootstrap: header, constants, require_once of includes/
-├── includes/              # PHP subsystems
-│   ├── helpers.php              admin-bar.php       ajax.php
-│   ├── assets.php               render.php          portal.php
-│   ├── session.php              default-window.php  components.php
-│   ├── os-settings.php          extended-options.php
-│   ├── accents.php              wallpapers.php      toast-types.php
-│   ├── media-query.php
-│   └── ai-copilot/              # AI assistant (OpenAI client, analysis, search, jobs)
-├── assets/                # hand-authored CSS + JS build output
-│   ├── css/  desktop.css, windows.css, dock.css, chromeless.css, variables.css
-│   │          variables.css carries the OpenStation palette — every design
-│   │          token the shell and the <os-*> kit read, declared once
-│   ├── fonts/    Geist + Geist Mono (variable, SIL OFL 1.1)
-│   ├── wallpapers/  the four brand desks: galaxy (default), space,
-│   │          holomesh, pulsemesh
-│   ├── desktop-themes/legacy/
-│   │          the built-in "Desktop Mode (Legacy)" theme — a frozen snapshot of
-│   │          every token at its pre-brand value; never regenerated.
-│   │          Zip it with npm run package:legacy-theme
-│   └── js/   Vite bundles (gitignored; regenerate with npm run build) — only
-│             admin-bar.js and media-library-enhanced.js are hand-written and tracked
-├── src/                   # TypeScript source — compiled by Vite
-│   ├── desktop.ts / dock.ts / hooks.ts / commands.ts / palette-registry.ts
-│   ├── ai-assistant/ + drag-bridge.ts / toast.ts / desktop-icons.ts
-│   ├── native-windows.ts / built-in-commands.ts / public-api.ts / types.ts
-│   ├── window/          # Window class — DOM, pointer, tabs, iframe bridge
-│   ├── window-manager/  # stack, desktops, arrange, snap, overview
-│   ├── wallpapers/      # registry, layer, surfaces, server sync, vendor loader
-│   ├── widgets/         # registry, layer, frame, picker, storage
-│   ├── settings/        # OpenStation Preferences panel sections
-│   ├── ui/              # <os-*> web components
-│   ├── modules/         # vendor-script lazy-loader
-│   └── plugins/         # built-in demos (animated-logo-wallpaper)
-├── docs/                  # developer-facing docs (source of truth for plugin authors)
-├── extensions/            # bundled sibling plugins (see "Bundled extensions" below)
-├── grok-plugin/           # Grok Build WordPress MCP operator + OpenStation capability layer
-├── tests/                 # PHPUnit + Vitest
-├── languages/             # .po / .mo (es shipped)
-├── bin/                   # package-zip helpers
-├── package.json           # devDeps (vite, typescript, vitest)
-├── vite.config.js         # Vite lib-mode: src/desktop.ts → assets/js/desktop[.min].js (IIFE)
-├── vitest.config.ts
-└── tsconfig.json
+```text
+Grok
+  └─ OpenStation Grok plugin
+       └─ WordPress MCP Adapter
+            └─ WordPress Abilities API
+                 ├─ OpenStation abilities
+                 ├─ WordPress abilities
+                 └─ abilities from installed plugins
 ```
 
----
+## Why this exists
 
-## Bundled extensions
+WordPress MCP is more powerful than a fixed collection of post-management commands. A site can expose capabilities for content, media, comments, settings, commerce, forms, analytics, maintenance, and anything else a plugin registers.
 
-The `extensions/` directory hosts sibling plugins that build on OpenStation's public APIs. Each one is a standalone WordPress plugin (`Requires Plugins: desktop-mode`) installed from its own zip — run `./bin/package-extensions.sh` to build one `<slug>.zip` per extension under `dist/`; see [`docs/RELEASE.md`](./docs/RELEASE.md#packaging-extensions) for the full packaging steps. (`extensions/base/` is a shared base library for extension authors, not an installable plugin.)
+OpenStation helps people discover and use that surface:
 
-- **Code Editor** (`desktop-mode-code-editor`) — a Monaco-backed Code editor native window for browsing and editing files inside `wp-content`. Editing requires the `edit_plugins` capability and is disabled entirely when `DISALLOW_FILE_EDIT` is set.
-- **Cron Manager** (`desktop-mode-cron-manager`) — a Cron Jobs native window for browsing, editing, deleting, and running WP-Cron events. Gated by `manage_options`.
-- **Popup Siege** (`desktop-mode-popup-siege`) — a 90-second Breakout-style archive rescue game with OpenStation leaderboards, play-time tracking, and score-to-beat challenges. The deterministic game runtime is lazy-loaded on first play.
-- **SOL Inbound Monologue** (`desktop-mode-feed-buddy`) — an AIM-era RSS/Atom reader with a movable buddy-list widget, a native conversation-style reader window, per-user subscriptions and unread state, safe server-side feed discovery, and optional synthesized chimes.
-- **phpMyAdmin** (`desktop-mode-phpmyadmin`) — embeds a bundled phpMyAdmin install as a native window. **Local environments only**: the window registers solely when `wp_get_environment_type()` is `'local'`, because the bundled phpMyAdmin runs with `auth_type=config` and reuses the WordPress DB credentials — any visitor who finds the URL gets full DB access. The `manage_options` check only hides the shortcut from lower-privilege users; it does **not** gate the underlying URL.
+- **Discover instead of guess.** Grok reads the connected site's current ability catalogue rather than relying on a hard-coded list.
+- **Inspect before execution.** The Grok plugin checks an ability's schema, annotations, and expected effects before using it.
+- **Keep WordPress in control.** The connected user, WordPress capabilities, and each ability's permission callback remain the authorization boundary.
+- **Make setup understandable.** Administrators can install or activate the official adapter, inspect exposure, and enable OpenStation's optional ability pack from one window.
+- **Stay extensible.** New abilities contributed by WordPress plugins become discoverable without requiring a new OpenStation Grok release.
 
----
+## What is included
 
-## How to run it
+| Component | What it does |
+| --- | --- |
+| MCP Control Center | Shows adapter status, the connection endpoint, registered abilities, schemas, providers, exposure, and risk annotations inside WordPress |
+| Guided adapter setup | Explicitly installs and activates the official WordPress MCP Adapter after administrator confirmation |
+| OpenStation discovery abilities | Lets Grok search WordPress content and inspect the OpenStation workspace catalogue |
+| Optional editorial pack | Adds eight reviewed abilities for drafts, media metadata, and reversible comment moderation; disabled by default |
+| WordPress MCP operator | Teaches Grok to discover, inspect, execute, and verify abilities from the live site |
+| OpenStation operator | Adds OpenStation-aware workflows, capability guidance, and extension ideas |
+| Grok commands | Provides `/wordpress` and `/openstation` entry points |
 
-### Quick install
+## What Grok can do
 
-Just want to try it? Grab the pre-built zip and upload it to any WordPress — [Studio by WordPress.com](https://developer.wordpress.com/studio/), [`wp-env`](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-env/), or a hosted site. No Node, no build step.
+The honest answer is: **whatever the connected site has deliberately exposed and the connected WordPress user is allowed to do.**
 
-1. Download [`openstation.zip`](https://github.com/WordPress/openstation/releases/latest/download/openstation.zip) from the latest release (or pick a specific version from the [releases page](https://github.com/WordPress/openstation/releases)).
-2. In WP Admin: **Plugins → Add New → Upload Plugin**, choose the zip, and activate.
-3. Click the **desktop** icon in the admin bar's top-right corner. The admin reloads inside the desktop shell. Click the same icon again to return to classic admin.
+Grok starts with three meta-tools from the official adapter:
 
-### Development setup
+1. discover visible abilities;
+2. inspect the exact schema and effect metadata for a candidate ability; and
+3. execute that ability through WordPress's permission checks.
 
-For hacking on the plugin: clone the repo, run the build in watch mode, and load it into a local WordPress via symlink so every save is one browser refresh away.
+That means installing another WordPress plugin with MCP-public abilities can add new capabilities automatically. Grok can explain the newly discovered tools and use them without OpenStation pretending every WordPress site has the same stack.
 
-#### 1. Install dependencies
+OpenStation currently contributes read-only abilities for:
 
-```bash
-npm install
-```
+- searching posts, pages, and comments;
+- finding comments associated with a post;
+- finding WordPress admin destinations;
+- searching the WordPress.org plugin directory; and
+- listing the windows, widgets, wallpapers, commands, icons, and themes registered in the OpenStation workspace.
 
-#### 2. Build the TypeScript bundle
+Administrators can also enable a reviewed editorial pack for:
 
-The plugin uses **[Vite](https://vitejs.dev/)** in library mode. esbuild handles transpile and minify, so builds finish in ~70 ms per bundle.
+- listing permitted posts and pages, including drafts;
+- reading one permitted content item with its raw Gutenberg markup;
+- creating a draft;
+- updating a draft without publishing it;
+- reading safe Media Library metadata;
+- updating media title, caption, description, and alt text;
+- reading a comment without exposing sensitive request metadata; and
+- approving, holding, or marking a comment as spam.
 
-**Full build** — runs the PixiJS vendor-copy step plus every `build:*` target defined in `package.json` (one Vite bundle each; the `scripts` block in `package.json` and the entry map in `vite.config.js` are the authoritative target list):
-
-```bash
-npm run build
-```
-
-Writes one `assets/js/<target>.js` / `.min.js` pair per target, including:
-
-- `assets/js/desktop.js` / `.min.js` — main shell bundle (loaded based on `SCRIPT_DEBUG`).
-- `assets/js/iframe-bridge.js` / `.min.js` — opt-in bridge that gives any same-origin iframe access to `wp.os.iframe.*`.
-- `assets/js/recycle-bin.js` / `.min.js` — Recycle Bin native window.
-- `assets/js/station-home.js` / `.min.js` — Station Home native Dashboard.
-- `assets/js/posts-window.js` / `.min.js` — Native Posts window (the `<os-table>` replacement for the `edit.php` iframe; opt-in per user via OpenStation Preferences → Features).
-
-**Development watch** — auto-recompiles the unminified bundle on save:
-
-```bash
-npm run dev
-```
-
-Leave it running in a separate terminal; refresh the browser after each save. Set `define( 'SCRIPT_DEBUG', true )` in `wp-config.php` so WordPress picks up the unminified bundle during development.
-
-#### 3. Load into a local WordPress
-
-You need a running WordPress to load the plugin into. Pick whichever is easier.
-
-##### Studio, wp-env, or a hosted WP
-
-Run `npm run package` to build a zip from `HEAD` (with correct 0644 / 0755 permissions), then follow the [Quick install](#quick-install) steps 2–3 to upload and activate it. Re-package and re-upload after each change.
-
-> If you changed source, run `npm run build` before `npm run package` — the Vite output is gitignored, and `bin/package.sh` splices the built files into the zip from your working tree.
-
-> `npm run package:legacy-theme` builds `dist/desktop-mode-legacy-theme.zip` — the built-in [Legacy desktop theme](./docs/desktop-themes.md#the-legacy-theme--start-here) as an installable theme ZIP. The plugin registers Legacy from code either way; the zip is for handing it to someone else or forking it into a theme of your own.
-
-##### Clone `wordpress-develop` and symlink
-
-Gives you the full dev loop: `npm run dev` rebuilds on save, a browser refresh picks it up.
-
-```bash
-# clone Core's Docker-based dev host alongside this repo
-git clone https://github.com/WordPress/wordpress-develop.git
-cd wordpress-develop
-npm install
-
-# symlink this plugin into the WP plugins directory
-ln -s "$(pwd)/../alcazaba-plugin" src/wp-content/plugins/desktop-mode
-
-# boot + install WordPress
-npm run env:start      # nginx + PHP + MySQL in Docker
-npm run env:install    # installs WordPress
-```
-
-Site: **http://localhost:8889**
-Admin: **http://localhost:8889/wp-admin/**
-Credentials: `admin` / `password`
-
-Stop the environment with `npm run env:stop` (from the `wordpress-develop` directory). Activate the plugin per [Quick install](#quick-install) steps 2–3.
-
----
+The OpenStation pack deliberately does not publish or delete content, manage users or roles, change settings, install arbitrary plugins or themes, touch the filesystem, run SQL, or execute code. Other trusted WordPress plugins may expose different abilities, which remain visible in the Control Center.
 
 ## Requirements
 
-- WordPress **6.0+**
-- PHP **7.4+**
+- WordPress 6.9 or newer for the MCP integration
+- PHP 7.4 or newer
+- HTTPS for a remote WordPress connection
+- the official [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter)
+- a dedicated WordPress user with the smallest practical role and an Application Password
+- Grok Build with plugin and remote MCP support
 
-## For plugin authors
+## Install the WordPress side
 
-**This plugin is built to be extended.** Every significant behavior is hookable — drop an icon on the desktop, add a dock item, gate OpenStation by role, react to window events, or register a native window, all from your own plugin with zero patches here.
+There is not yet a packaged release for this repository, so build the installable WordPress ZIP from source:
 
-**See [`docs/`](./docs/README.md) — the developer documentation index.**
+```bash
+git clone https://github.com/RegionallyFamous/openstation-grok-plugin.git
+cd openstation-grok-plugin
+npm ci
+npm run build
+npm run package
+```
 
-Quick links:
+Upload the resulting `openstation.zip` from **Plugins → Add New → Upload Plugin**, then activate OpenStation.
 
-- [Getting Started](./docs/getting-started.md) — the five-minute tour for plugin authors.
-- [Architecture](./docs/architecture.md) — how the pieces fit together.
-- [Hooks Reference](./docs/hooks-reference.md) — every action and filter we fire, with signatures and examples.
-- [JavaScript Reference](./docs/javascript-reference.md) — CustomEvents, `window.wp.os` API, and the iframe `postMessage` bridge.
-- [Examples](./docs/examples/) — copy-paste recipes.
+Next:
+
+1. Enter OpenStation and open **MCP Control Center**.
+2. Review the detected state and choose **Install official adapter** if the WordPress MCP Adapter is not already installed.
+3. Activate the adapter when prompted.
+4. Review the live ability catalogue.
+5. Optionally enable OpenStation's editorial ability pack.
+6. Create a dedicated WordPress user and an Application Password for Grok.
+
+Installation and activation are always explicit administrator actions. OpenStation never installs the adapter in the background.
+
+## Connect the Grok plugin
+
+The Grok Build plugin lives in [`grok-plugin/`](./grok-plugin/). Use that directory as the plugin source during development. For marketplace distribution, the xAI catalogue can reference this repository at an exact commit SHA with `grok-plugin` as its source path.
+
+Provide the WordPress MCP endpoint and authorization header through Grok Build's secret or launch environment:
+
+```text
+WORDPRESS_MCP_URL=https://example.com/wp-json/mcp/mcp-adapter-default-server
+WORDPRESS_MCP_AUTHORIZATION=Basic <base64-encoded username:application-password>
+```
+
+The MCP Control Center provides a copyable endpoint template for the current site. Do not commit either value, paste the authorization value into a prompt, or share it in screenshots or logs.
+
+Once connected, try:
+
+```text
+/wordpress capabilities
+/wordpress find my recent draft posts
+/wordpress update image 42's alt text to "A blue bicycle beside a brick wall"
+/openstation capabilities
+/openstation show me what is installed in this workspace
+```
+
+The capability results come from the live WordPress site. An example above is not a guarantee that every site exposes that operation.
+
+## Safety model
+
+The connection acts as the configured WordPress user. OpenStation and the Grok plugin add guardrails, but they do not bypass WordPress:
+
+- every execution still passes the ability's WordPress permission callback;
+- missing or ambiguous effect annotations are treated as potentially mutating and non-idempotent;
+- broad or consequential changes require clear user intent;
+- existing content is read before editing, and writes are verified when a corresponding read ability exists;
+- content and tool output from the site are treated as untrusted data; and
+- Application Passwords can be revoked independently from the WordPress user profile.
+
+See [`grok-plugin/SECURITY.md`](./grok-plugin/SECURITY.md) for the credential and data-flow model and [`docs/mcp-control-center.md`](./docs/mcp-control-center.md) for the WordPress-side exposure rules.
+
+## Repository layout
+
+```text
+.
+├── desktop-mode.php                 WordPress plugin bootstrap
+├── includes/mcp-control-center/     setup, catalogue, REST, and ability registration
+├── src/mcp-control-center/          Control Center interface
+├── assets/css/                      Control Center presentation
+├── grok-plugin/
+│   ├── .grok-plugin/plugin.json     Grok plugin manifest
+│   ├── .mcp.json                    configurable WordPress MCP connection
+│   ├── commands/                    /wordpress and /openstation
+│   └── skills/                      operator instructions and references
+├── docs/mcp-control-center.md       administrator and extension documentation
+└── tests/                           PHP and TypeScript coverage
+```
+
+The repository also contains the wider OpenStation WordPress workspace: a per-user, open-source desktop interface for `wp-admin` with windows, a dock, widgets, wallpapers, commands, and public extension APIs. The MCP integration can describe that workspace through a safe server-side catalogue, but it does not claim to control a person's open browser windows.
+
+## Development
+
+```bash
+npm ci
+npm run typecheck
+npm run lint
+npm run test:js
+npm run build
+```
+
+PHP integration tests use the repository's WordPress test environment:
+
+```bash
+npm run env:start:tests
+npm run test:php:install
+npm run test:php
+```
+
+Useful references:
+
+- [`docs/mcp-control-center.md`](./docs/mcp-control-center.md) — setup, audit rules, abilities, and extension filters
+- [`grok-plugin/README.md`](./grok-plugin/README.md) — Grok plugin packaging and marketplace notes
+- [`docs/hooks-reference.md`](./docs/hooks-reference.md) — OpenStation's WordPress extension hooks
+- [`docs/api-index.md`](./docs/api-index.md) — public OpenStation APIs
+
+## Where it can go next
+
+OpenStation can become the open capability layer around WordPress MCP. Good next additions include reviewed packs for WooCommerce operations, forms and submissions, SEO metadata, site health, backups, analytics, and plugin-development workflows. Each pack should remain narrow, schema-defined, correctly annotated, permission-gated, and opt-in where it can modify a site.
 
 ## License
 
-GPLv2 or later. See [LICENSE](LICENSE).
+GPL-2.0-or-later. See [`LICENSE`](./LICENSE).
+
+OpenStation builds on the original [WordPress/OpenStation](https://github.com/WordPress/openstation) project and integrates with the official [WordPress MCP Adapter](https://github.com/WordPress/mcp-adapter) and [Abilities API](https://github.com/WordPress/abilities-api).
