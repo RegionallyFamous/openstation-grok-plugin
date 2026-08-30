@@ -197,6 +197,19 @@ Inside an iframe window, after the chromeless bridge installs the API:
 
 ---
 
+## MCP and WordPress Abilities
+
+| Surface | Where | Status |
+|---|---|---|
+| MCP Control Center window and security model | [`mcp-control-center.md`](./mcp-control-center.md) | Experimental |
+| `GET /desktop-mode/v1/mcp-control-center` | [`mcp-control-center.md`](./mcp-control-center.md#what-the-window-reports) | Experimental |
+| MCP Adapter setup + editorial pack | [`mcp-control-center.md`](./mcp-control-center.md#guided-setup) | Experimental |
+| Eight opt-in editorial abilities | [`mcp-control-center.md`](./mcp-control-center.md#optional-editorial-ability-pack) | Experimental |
+| `desktop-mode/list-workspace-catalog` ability | [`mcp-control-center.md`](./mcp-control-center.md#workspace-catalogue-ability) | Experimental |
+| Control Center capability/window/icon filters | [`hooks-reference.md`](./hooks-reference.md#mcp-control-center) | Experimental |
+
+---
+
 ### AI Agents *(Experimental — behind the `agents` extended option)*
 
 No dedicated `wp.os.agents` namespace yet — the surface is REST +

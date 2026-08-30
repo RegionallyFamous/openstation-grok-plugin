@@ -63,6 +63,9 @@ Zero Core patches. Every feature is wired through public WordPress hooks.
 - **AI Assistant + slash commands**
   Cmd+K palette backed by an OpenAI agentic loop whose `search_posts` / `search_pages` / `search_comments` tools run WordPress's native keyword search. Admin-configured API key + model picker. The only automatic AI analysis is comment spam scoring (on comment save), which feeds the comments-window spam score; posts, pages, and terms are not analyzed. `wp.os.registerCommand()` adds slash commands with autocomplete (`suggest()`), confirm dialogs (`ctx.confirm()`), and full lifecycle hooks (`before-run` / `after-run` / `error`). Built-in `/open [window]` is extensible via `os.open-command.items`.
 
+- **MCP Control Center**
+  Administrator-only setup and audit surface for the official WordPress MCP Adapter. It can explicitly install/activate the official GitHub release, guides Application Password setup, exposes a disabled-by-default editorial ability pack, and audits every registered ability's public/private exposure, read/write/destructive risk, provider, and schemas. OpenStation also contributes a safe, MCP-public `desktop-mode/list-workspace-catalog` ability so connected assistants can explain the registered workspace without receiving callbacks, nonces, configuration, or browser-local state. See [`docs/mcp-control-center.md`](./docs/mcp-control-center.md).
+
 - **Palette registry**
   Cmd+K cycles through all registered palettes (`wp.os.registerPalette()`) — the AI assistant is palette 0 by default; additional plugin overlays share the shortcut.
 
@@ -147,6 +150,7 @@ See [`docs/architecture.md`](./docs/architecture.md) for how the pieces fit toge
 │   └── plugins/         # built-in demos (animated-logo-wallpaper)
 ├── docs/                  # developer-facing docs (source of truth for plugin authors)
 ├── extensions/            # bundled sibling plugins (see "Bundled extensions" below)
+├── grok-plugin/           # Grok Build WordPress MCP operator + OpenStation capability layer
 ├── tests/                 # PHPUnit + Vitest
 ├── languages/             # .po / .mo (es shipped)
 ├── bin/                   # package-zip helpers

@@ -37,7 +37,7 @@ function openstation_ai_register_ability_category() {
 		OPENSTATION_AI_ABILITY_CATEGORY,
 		array(
 			'label'       => __( 'OpenStation', 'desktop-mode' ),
-			'description' => __( 'Read-only content search and wp-admin navigation abilities powering the OpenStation AI assistant.', 'desktop-mode' ),
+			'description' => __( 'OpenStation content, navigation, workspace, and editorial abilities.', 'desktop-mode' ),
 		)
 	);
 }

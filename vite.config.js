@@ -365,6 +365,15 @@ const TARGETS = {
 		fileBase: 'code-blue',
 		iifeName: 'openStationCodeBlue',
 	},
+	// MCP Control Center — administrator audit of the WordPress
+	// Abilities registry, MCP exposure, and declared risk metadata.
+	// Registers a render callback on
+	// `window.openStationNativeWindows['openstation-mcp-control-center']`.
+	'mcp-control-center': {
+		entry:    'src/mcp-control-center/index.ts',
+		fileBase: 'mcp-control-center',
+		iifeName: 'openStationMcpControlCenter',
+	},
 	// Games hub — launcher grid + scoreboard + challenges client.
 	// Registers a render callback on
 	// `window.openStationNativeWindows['desktop-mode-games']`; the

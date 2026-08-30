@@ -4115,6 +4115,41 @@ Tweak the args passed to `openstation_register_window()` / `openstation_register
 
 ---
 
+## MCP Control Center
+
+The administrator-only MCP Control Center sets up the official bridge and audits the WordPress Abilities registry and its effective MCP Adapter exposure without executing abilities or probing their permission callbacks. See [`mcp-control-center.md`](./mcp-control-center.md) for the complete behavior and security boundary.
+
+### `openstation_mcp_control_center_user_can_use` — Experimental (filter)
+
+```php
+apply_filters( 'openstation_mcp_control_center_user_can_use', bool $can ): bool
+```
+
+Gate shared by the native window and `GET /desktop-mode/v1/mcp-control-center`. Defaults to `current_user_can( 'manage_options' )`. The route includes schemas for private abilities, so treat widening this filter as a privileged-data decision.
+
+### `openstation_mcp_control_center_window_args` / `openstation_mcp_control_center_icon_args` — Experimental (filters)
+
+```php
+apply_filters( 'openstation_mcp_control_center_window_args', array $window_args ): array
+apply_filters( 'openstation_mcp_control_center_icon_args',   array $icon_args ):   array
+```
+
+Tweak the args passed to `openstation_register_window()` and `openstation_register_icon()` for the Control Center. The window config contains its REST endpoint and nonce; do not expose that config through an MCP ability or public endpoint.
+
+### `openstation_mcp_editorial_pack_enabled` — Experimental (filter)
+
+```php
+apply_filters( 'openstation_mcp_editorial_pack_enabled', bool $enabled ): bool
+```
+
+Filters the site-wide opt-in state used for `meta.mcp.public` on OpenStation's eight reviewed editorial abilities. The stored default is false. This controls discovery only; every execution still passes the ability's WordPress capability callback.
+
+### `desktop-mode/list-workspace-catalog` — Experimental (ability)
+
+MCP-public, read-only, and idempotent. Returns sanitized registration metadata for OpenStation windows, icons, widgets, wallpapers, commands, and desktop themes. It deliberately excludes executable callbacks, asset handles, URLs, nonces, arbitrary config, theme tokens/assets, and browser-local workspace state.
+
+---
+
 ## Code Blue
 
 An error-log reader: tails the logs the install can produce (WP debug log, PHP error log, anything a plugin registers), parses them into structured entries, and renders a severity histogram plus a grouped issue list. Registers a native window (`openstation-code-blue`) plus a desktop icon on `init` priority 20. Server module: `includes/code-blue/`. The REST routes live under the plugin's frozen `desktop-mode/v1` namespace like every other route.

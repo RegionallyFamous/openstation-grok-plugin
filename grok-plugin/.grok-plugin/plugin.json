@@ -1,0 +1,27 @@
+{
+  "name": "openstation-wordpress",
+  "version": "0.1.0",
+  "description": "Operate a WordPress site through its official MCP Adapter, discover every ability the site exposes, and unlock OpenStation-specific workflows.",
+  "author": {
+    "name": "OpenStation contributors",
+    "url": "https://github.com/WordPress/openstation"
+  },
+  "homepage": "https://wordpress.org/plugins/desktop-mode/",
+  "repository": "https://github.com/WordPress/openstation",
+  "license": "GPL-2.0-or-later",
+  "keywords": [
+    "openstation",
+    "open station wordpress",
+    "wp openstation",
+    "openstation wordpress mcp",
+    "openstation grok"
+  ],
+  "skills": [
+    "./skills/wordpress-mcp-operator",
+    "./skills/openstation-for-wordpress"
+  ],
+  "commands": [
+    "./commands/wordpress.md",
+    "./commands/openstation.md"
+  ]
+}

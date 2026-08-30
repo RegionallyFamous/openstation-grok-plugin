@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "wordpress": {
+      "type": "http",
+      "url": "${WORDPRESS_MCP_URL}",
+      "headers": {
+        "Authorization": "${WORDPRESS_MCP_AUTHORIZATION}"
+      }
+    }
+  }
+}

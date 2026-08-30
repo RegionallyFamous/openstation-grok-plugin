@@ -44,6 +44,7 @@ All in-tree routes register under `desktop-mode/v1`. Extensions are expected to 
 | `/content-graph/post/{id}` | GET | `includes/content-graph/rest.php` | `edit_posts` (filterable via `openstation_content_graph_user_can_use`) |
 | `/code-blue/sources` | GET | `includes/code-blue/rest.php` | Developer mode + `manage_options` (`manage_network_options` on multisite; filterable via `openstation_code_blue_user_can_use`) |
 | `/code-blue/entries` | GET / DELETE | `includes/code-blue/rest.php` | Developer mode + `manage_options` (`manage_network_options` on multisite; filterable via `openstation_code_blue_user_can_use`) |
+| `/mcp-control-center` | GET | `includes/mcp-control-center/rest.php` | `manage_options` (filterable via `openstation_mcp_control_center_user_can_use`) |
 | `/comment-stats/{id}` | GET | `includes/my-wordpress/comment-stats.php` | logged-in |
 | `/term-stats/{taxonomy}/{id}` | GET | `includes/my-wordpress/term-stats.php` | logged-in + `read` |
 | `/user-stats/{id}` | GET | `includes/my-wordpress/user-stats.php` | logged-in |
@@ -71,6 +72,8 @@ All in-tree routes register under `desktop-mode/v1`. Extensions are expected to 
 | `/agents/roles` | GET | `includes/agents/rest.php` | `edit_users` (filterable) |
 
 ## Conventions
+
+MCP Adapter installation/activation and the editorial-pack opt-in are nonce-protected admin-ajax actions (`openstation_mcp_setup`) because WordPress's plugin upgrader is an admin facility; they are documented in [`docs/mcp-control-center.md`](../../docs/mcp-control-center.md).
 
 - **Nonce.** Every state-changing route requires `X-WP-Nonce` (the standard REST nonce). Read routes that depend on per-user state also require it.
 - **Permission.** Permission callbacks use either `is_user_logged_in()` + capability checks or domain predicates. Shell-internal endpoints that only touch the caller's own per-user desktop state (`/session`, `/default-window`, `/intros`, `/os-settings`, `/pwa-state`, `/presence`) share the `openstation_rest_require_enabled()` gate (`includes/helpers.php`): logged-in **and** `openstation_is_enabled()`, returning `401` when logged out and `403` when OpenStation is off. `read` alone is deliberately not enough — every authenticated role carries it. Filtering with `openstation_*` hooks lets plugins extend or harden access.
